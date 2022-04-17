@@ -1,0 +1,8 @@
+[submodule "extern/googletest"]
+	path = extern/googletest
+	url = https://github.com/google/googletest.git
+	branch = tags/release-1.11.0
+[submodule "extern/bmi-cxx"]
+	path = extern/bmi-cxx
+	url = https://github.com/csdms/bmi-cxx.git
+	branch = tags/v2.0

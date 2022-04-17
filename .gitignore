@@ -41,23 +41,9 @@ Thumbs.db
 ##################
 *.swp
 
-# Python #
-#################
-*.pyc
-*.egg-info/
-__pycache__/
-*.py[cod]
-.env
-.python-version
-
 # pyenv #
 #########
 .python-version
-
-# Django #
-#################
-*.egg-info
-.installed.cfg
 
 # Unit test / coverage reports
 #################
@@ -68,10 +54,6 @@ htmlcov/
 nosetests.xml
 coverage.xml
 
-# Front-End #
-#############
-node_modules/
-bower_components/
-.grunt/
-src/vendor/
-dist/
+cmake_build/
+build/
+.vscode/

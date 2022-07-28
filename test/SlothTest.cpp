@@ -139,3 +139,46 @@ TEST(Sloth_Test, TestSlothSetInputAlias){
 
 }
 
+TEST(Sloth_Test, TestSlothGetVarNbytesAddsVariable)
+{
+  auto s = Sloth();
+
+  double v = 42.0;
+  int nbytes = 0;
+  nbytes = s.GetVarNbytes("adouble");
+  s.GetValue("adouble",&v);
+
+  ASSERT_EQ( nbytes, 8 );
+  ASSERT_EQ( v, 0.0 );
+
+}
+
+TEST(Sloth_Test, TestSlothGetVarLocationAddsVariable)
+{
+  auto s = Sloth();
+
+  double v = 42.0;
+  std::string str;
+  str = s.GetVarLocation("adouble");
+  s.GetValue("adouble",&v);
+
+  ASSERT_STREQ( str.c_str(), "node" );
+  ASSERT_EQ( v, 0.0 );
+
+}
+
+TEST(Sloth_Test, TestSlothGetVarTypeAddsVariable)
+{
+  auto s = Sloth();
+
+  double v = 42.0;
+  std::string str;
+  str = s.GetVarType("adouble");
+  s.GetValue("adouble",&v);
+
+  ASSERT_STREQ( str.c_str(), "double" );
+  ASSERT_EQ( v, 0.0 );
+
+}
+
+

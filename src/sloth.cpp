@@ -13,6 +13,7 @@
 #include <map>
 #include <set>
 #include <limits>
+//#include <iostream>
 
 std::string Sloth::GetComponentName(){
   return "Simple Logical Tautology Handler (SLoTH) Model";
@@ -124,6 +125,7 @@ int Sloth::GetVarItemsize(std::string name){ //v
 }
 
 std::string Sloth::GetVarLocation(std::string name){ //v
+  name = this->ProcessNameMeta(name);
   name = this->ResolveInNameAlias(name);
 
   auto iter = this->var_locations.find(name);
@@ -134,6 +136,7 @@ std::string Sloth::GetVarLocation(std::string name){ //v
 }
 
 int Sloth::GetVarNbytes(std::string name){ //v
+  name = this->ProcessNameMeta(name);
   name = this->ResolveInNameAlias(name);
 
   if(var_nbytes.count(name) <= 0){
@@ -147,6 +150,7 @@ int Sloth::GetVarNbytes(std::string name){ //v
 }
 
 std::string Sloth::GetVarType(std::string name){ //v
+  name = this->ProcessNameMeta(name);
   name = this->ResolveInNameAlias(name);
 
   auto iter = this->var_types.find(name);
@@ -189,7 +193,6 @@ void Sloth::SetValueAtIndices(std::string name, int* inds, int count, void* src)
 
   // If this somehow gets called first, we will need space as if we are setting by value. This *should* never happen.
   name = this->ProcessNameMeta(name);
-  this->EnsureAllocatedForByValue(name);
 
   void *dest;
   dest = this->GetValuePtr(name);
@@ -223,7 +226,6 @@ void Sloth::SetValue(std::string name, void* src){ //v
   // Otherwise...
 
   name = this->ProcessNameMeta(name);
-  this->EnsureAllocatedForByValue(name);
 
   void *dest = this->GetValuePtr(name);
   int nbytes = this->GetVarNbytes(name);
@@ -409,7 +411,8 @@ std::string Sloth::ProcessNameMeta(std::string name){ //v
   if(inname != ""){
 	  var_innames[raw_name] = inname;
   }
-  //NOTE: that we are NOT setting anything in var_nbytes...what will go there depends on what kind of Set operation was done!
+  //std::cerr<<"ProcessNameMeta processed "<<raw_name<<"("<<var_counts[raw_name]<<","<<type<<","<<units<<","<<location<<","<<inname<<")"<<std::endl;
+  this->EnsureAllocatedForByValue(raw_name);
 
   return raw_name;
 }

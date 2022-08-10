@@ -149,8 +149,9 @@ TEST(Sloth_Test, TestSlothGetVarNbytesAddsVariable)
   s.GetValue("adouble",&v);
 
   ASSERT_EQ( nbytes, 8 );
-  ASSERT_EQ( v, 0.0 );
-
+  ASSERT_NE( v, 42.0 );
+  v = 42.0; // Don't crash
+  //TODO: Consider https://stackoverflow.com/a/60853836/489116 ?
 }
 
 TEST(Sloth_Test, TestSlothGetVarLocationAddsVariable)
@@ -163,8 +164,8 @@ TEST(Sloth_Test, TestSlothGetVarLocationAddsVariable)
   s.GetValue("adouble",&v);
 
   ASSERT_STREQ( str.c_str(), "node" );
-  ASSERT_EQ( v, 0.0 );
-
+  ASSERT_NE( v, 42.0 );
+  v = 42.0; // Don't crash
 }
 
 TEST(Sloth_Test, TestSlothGetVarTypeAddsVariable)
@@ -177,8 +178,8 @@ TEST(Sloth_Test, TestSlothGetVarTypeAddsVariable)
   s.GetValue("adouble",&v);
 
   ASSERT_STREQ( str.c_str(), "double" );
-  ASSERT_EQ( v, 0.0 );
-
+  ASSERT_NE( v, 42.0 );
+  v = 42.0; // Don't crash
 }
 
 

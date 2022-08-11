@@ -1,0 +1,63 @@
+{
+    "global": {
+        "formulations": [
+            {
+                "name": "bmi_multi",
+                "params": {
+                    "model_type_name": "bmi_multi_sloth_toybmi",
+                    "uses_forcing_file": false,
+                    "forcing_file": "",
+                    "init_config": "",
+                    "allow_exceed_end_time": true,
+                    "main_output_variable": "Q_OUT",
+                    "output_variables" : [
+                        "water_potential_evaporation_flux","sloth_precip_rate","DEEP_GW_TO_CHANNEL_FLUX","Q_OUT"
+                    ],
+                    "modules": [
+                        {
+                            "name": "bmi_c++",
+                            "params": {
+                                "model_type_name": "bmi_c++_sloth",
+                                "library_file": "extern/sloth/cmake_build/libslothmodel.so",
+                                "init_config": "/dev/null",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "z",
+                                "uses_forcing_file": false,
+                                "model_params": {
+                                    "sloth_precip_rate(1,double,mm s^-1)": 2.8,
+                                    "water_potential_evaporation_flux(1,double,mm/s)": 2.0
+                                }
+                            }
+                        },
+                        {
+                            "name": "bmi_c",
+                            "params": {
+                                "model_type_name": "bmi_c_cfe",
+                                "library_file": "./extern/cfe/cmake_build/libcfebmi",
+                                "forcing_file": "",
+                                "init_config": "./data/bmi/c/cfe/{{id}}_bmi_config.ini",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "Q_OUT",
+                                "registration_function": "register_bmi_cfe",
+                                "uses_forcing_file": false,
+                                "variables_names_map": {
+                                    "atmosphere_water__liquid_equivalent_precipitation_rate": "sloth_precip_rate"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ],
+        "forcing": {
+            "provider": "CsvPerFeature",
+            "file_pattern": ".*cat-67.*.csv",
+            "path": "./data/forcing/"
+        }
+    },
+    "time": {
+        "start_time": "2015-12-01 00:00:00",
+        "end_time": "2015-12-30 23:00:00",
+        "output_interval": 3600
+    }
+}

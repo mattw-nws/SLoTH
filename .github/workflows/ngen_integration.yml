@@ -47,7 +47,7 @@ jobs:
         cmake -S extern/sloth -B extern/sloth/cmake_build
 
     - name: Build SLoTH Library
-      run: cmake --build cmake_build --target slothmodel -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+      run: cmake --build extern/sloth/cmake_build --target slothmodel -- -j ${{ env.LINUX_NUM_PROC_CORES }}
       timeout-minutes: 15
 
     - name: Build Ngen

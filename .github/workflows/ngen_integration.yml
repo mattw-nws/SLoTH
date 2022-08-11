@@ -1,0 +1,65 @@
+name: Testing and Validation
+
+# Controls when the action will run.
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+env:
+  # Obtained from https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+  # TODO: add something later that can check the runners for hyperthreading
+  LINUX_NUM_PROC_CORES: 2
+  MACOS_NUM_PROC_CORES: 3
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # Run general unit tests in linux environment
+  test_integration_solo:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - name: Checkout ngen
+      uses: actions/checkout@v3
+      with:
+        repository: NOAA-OWP/ngen
+
+    - name: Checkout SLoTH
+      uses: actions/checkout@v3
+      with:
+        path: extern/sloth
+
+    - name: Init SLoTH Submodules
+      run: |
+        pushd extern/sloth
+        git submodule update --init --recursive
+        popd
+
+    - name: CMake Init Build
+      run: |
+        cmake -S extern/sloth -B extern/sloth/cmake_build
+
+    - name: Build SLoTH Library
+      run: cmake --build cmake_build --target slothmodel -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+      timeout-minutes: 15
+
+    - name: Build Ngen
+      uses: ./.github/actions/ngen-build
+      with:
+        targets: "ngen"
+        build-cores: ${{ env.LINUX_NUM_PROC_CORES }}
+      timeout-minutes: 15
+
+    - name: Run SLoTH Solo
+      run: |
+        inputfile='extern/sloth/test/data/sloth_realization.json'
+        ./cmake_build/ngen data/catchment_data.geojson "cat-27" data/nexus_data.geojson "nex-26" $inputfile
+
+    

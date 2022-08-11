@@ -43,5 +43,5 @@ jobs:
 
     - name: Run Unit Tests
       run: |
-        ./cmake_build/test/test_bmi_cpp
+        ./cmake_build/test/sloth_tests
       timeout-minutes: 15

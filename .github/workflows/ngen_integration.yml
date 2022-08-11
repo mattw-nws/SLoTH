@@ -1,4 +1,4 @@
-name: Testing and Validation
+name: ngen Integration Tests
 
 # Controls when the action will run.
 on:

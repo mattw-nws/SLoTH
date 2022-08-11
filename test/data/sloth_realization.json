@@ -1,0 +1,49 @@
+{
+    "global": {
+        "formulations": [
+            {
+                "name": "bmi_multi",
+                "params": {
+                    "model_type_name": "bmi_multi_sloth_toybmi",
+                    "uses_forcing_file": false,
+                    "forcing_file": "",
+                    "init_config": "",
+                    "allow_exceed_end_time": true,
+                    "main_output_variable": "water_output",
+                    "modules": [
+                        {
+                            "name": "bmi_c++",
+                            "params": {
+                                "model_type_name": "bmi_c++_sloth",
+                                "library_file": "extern/sloth/cmake_build/libslothmodel.so",
+                                "init_config": "/dev/null",
+                                "allow_exceed_end_time": true,
+                                "main_output_variable": "z",
+                                "output_variables" : [
+                                    "x","y","z","a"
+                                ],
+                                "uses_forcing_file": false,
+                                "model_params": {
+                                    "x": 42.0,
+                                    "y": 1024.0,
+                                    "z(1,double,mm s^-1,node,atmosphere_water__liquid_equivalent_precipitation_rate)": "0.0",
+                                    "a(3,double)": [1.0, 2.0, 3.0] 
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ],
+        "forcing": {
+            "provider": "CsvPerFeature",
+            "file_pattern": ".*cat-67.*.csv",
+            "path": "./data/forcing/"
+        }
+    },
+    "time": {
+        "start_time": "2015-12-01 00:00:00",
+        "end_time": "2015-12-30 23:00:00",
+        "output_interval": 3600
+    }
+}

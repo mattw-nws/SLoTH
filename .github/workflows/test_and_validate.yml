@@ -1,0 +1,47 @@
+name: Testing and Validation
+
+# Controls when the action will run.
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+env:
+  # Obtained from https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+  # TODO: add something later that can check the runners for hyperthreading
+  LINUX_NUM_PROC_CORES: 2
+  MACOS_NUM_PROC_CORES: 3
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # Run general unit tests in linux environment
+  test_unit:
+    # The type of runner that the job will run on
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - name: Checkout the commit
+      uses: actions/checkout@v2
+    
+    - name: Init Submodules
+      run: git submodule update --init --recursive
+
+    - name: CMake Init Build
+      run: |
+        cmake -B cmake_build -S .
+
+    - name: Build Unit Tests
+      run: cmake --build cmake_build --target sloth_tests -- -j ${{ env.LINUX_NUM_PROC_CORES }}
+      timeout-minutes: 15
+
+    - name: Run Unit Tests
+      run: |
+        ./cmake_build/test/test_bmi_cpp
+      timeout-minutes: 15
